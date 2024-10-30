@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'PaymentGateway',
     'BillingSystem',
     'AcademicManagement',
+    'django_extensions',
 
 ]
 
