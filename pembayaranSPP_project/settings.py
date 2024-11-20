@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +34,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    "unfold",  # before django.contrib.admin
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "unfold.contrib.import_export",  # optional, if django-import-export package is used
+    "unfold.contrib.guardian",  # optional, if django-guardian package is used
+    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
+    "django.contrib.admin",  # required
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -42,6 +52,7 @@ INSTALLED_APPS = [
     'BillingSystem',
     'AcademicManagement',
     'django_extensions',
+    'pembayaranSPP_project'
 
 ]
 
@@ -131,3 +142,143 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+UNFOLD = {
+    "SITE_TITLE": "MySpp",
+    "SITE_HEADER": "MySpp",
+    "SITE_URL": "/",
+    # "SITE_ICON": lambda request: static("icon.svg"),  # both modes, optimise for 32px height
+    "SITE_ICON": {
+        "light": lambda request: static("assets/logo.png"),  # light mode
+        "dark": lambda request: static("assets/logo.png"),  # dark mode
+    },
+    "SIDEBAR": {
+        "show_search": False,  # Search in applications and models names
+        "show_all_applications": False,  # Dropdown with all applications and models
+        "navigation": [
+            {
+                "title": _("Navigation"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:index"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    # {
+                    #     "title": _("Users"),
+                    #     "icon": "people",
+                    #     "link": reverse_lazy("admin:users_user_changelist"),
+                    # },
+                ],
+            },
+            {
+                "title": _("Akademik Management"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Fakultas"),
+                        "icon": "school",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:AcademicManagement_fakultas_changelist"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("programstudi"),
+                        "icon": "local_library",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:AcademicManagement_programstudi_changelist"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    # {
+                    #     "title": _("Users"),
+                    #     "icon": "people",
+                    #     "link": reverse_lazy("admin:users_user_changelist"),
+                    # },
+                ],
+            },
+            {
+                "title": _("Billingsystem"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("pengembaliandana"),
+                        "icon": "currency_exchange",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:BillingSystem_pengembaliandana_changelist"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("tagihan"),
+                        "icon": "credit_card",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:BillingSystem_tagihan_changelist"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    # {
+                    #     "title": _("Users"),
+                    #     "icon": "people",
+                    #     "link": reverse_lazy("admin:users_user_changelist"),
+                    # },
+                ],
+            },
+            {
+                "title": _("Paymentgateway"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("transaksi"),
+                        "icon": "contract_edit",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:PaymentGateway_log_transaksi_changelist"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("pembayaran"),
+                        "icon": "payments",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:PaymentGateway_pembayaran_changelist"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    # {
+                    #     "title": _("Users"),
+                    #     "icon": "people",
+                    #     "link": reverse_lazy("admin:users_user_changelist"),
+                    # },
+                ],
+            },
+            {
+                "title": _("Pembayaranspp"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("mahasiswa"),
+                        "icon": "person",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:pembayaranSPP_mahasiswa_changelist"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("DataSpp"),
+                        "icon": "upload_file",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:pembayaranSPP_spp_changelist"),
+                        # "badge": "sample_app.badge_callback",
+                        # "permission": lambda request: request.user.is_superuser,
+                    },
+                    # {
+                    #     "title": _("Users"),
+                    #     "icon": "people",
+                    #     "link": reverse_lazy("admin:users_user_changelist"),
+                    # },
+                ],
+            },
+        ],
+    },
+}
